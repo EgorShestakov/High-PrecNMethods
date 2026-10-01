@@ -35,22 +35,26 @@ def for_system(n, h, n_points=5):
 
 
 def for_diff_eq(n, h, n_points=5):
-    """Задание 3: таблица пяти начальных значений для ОДУ 2-го порядка."""
     t0, y0, y1 = data_ode()
-    y_n_sym, val_Y, t_sym = build_taylor_ode(n)
+    y_n_sym, y1_n_sym, val_Y, t_sym = build_taylor_ode(n)
 
-    print("\n=== ОДУ 2-го порядка: ряд Маклорена ===")
-    print("y(t) =", y_n_sym)
+    print("\n=== ОДУ 2-го порядка: ряды Маклорена ===")
+    print("y(t)  =", y_n_sym)
+    print("y'(t) =", y1_n_sym)
     print("Значения производных в t0:")
     for k, v in val_Y.items():
         print(f"  y^({k})(t0) = {v}")
 
     y_fn = sp.lambdify(t_sym, y_n_sym, 'numpy')
+    y1_fn = sp.lambdify(t_sym, y1_n_sym, 'numpy')
+
     t = np.arange(t0, t0 + n_points * h, h)
     y_approx = y_fn(t)
+    y1_approx = y1_fn(t)
 
-    y_exact, _ = analytical_ode(t)
-    return t, y_exact, y_approx
+    y_exact, y1_exact = analytical_ode(t)
+
+    return t, y_exact, y1_exact, y_approx, y1_approx
 
 
 def solve_several_h(n=5):
@@ -67,11 +71,11 @@ def solve_several_h(n=5):
         print("δy =", fmt(max_error_percent(y_exact, y_approx, abs_error)))
 
         # --- ОДУ 2-го порядка ---
-        t_ode, y_exact_ode, y_approx_ode = for_diff_eq(n, h)
+        t_ode, y_exact_ode, y1_exact_ode, y_approx_ode, y1_approx_ode = for_diff_eq(n, h)
         print("\n--- Таблица (ОДУ 2-го порядка) ---")
-        print_table(y_exact_ode, np.zeros_like(y_exact_ode),
-                    y_approx_ode, np.zeros_like(y_approx_ode), t_ode)
-        print("δy =", fmt(max_error_percent(y_exact_ode, y_approx_ode, abs_error)))
+        print_table(y_exact_ode, y1_exact_ode, y_approx_ode, y1_approx_ode, t_ode)
+        print("δy  =", fmt(max_error_percent(y_exact_ode, y_approx_ode, abs_error)))
+        print("δy' =", fmt(max_error_percent(y1_exact_ode, y1_approx_ode, abs_error)))
 
 
 if __name__ == "__main__":

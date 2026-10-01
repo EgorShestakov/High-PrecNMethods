@@ -13,14 +13,6 @@ from data.option import data_ode, ode_rhs
 
 
 def build_taylor_ode(n):
-    """
-    Строит ряд Тейлора для y(t) до порядка n включительно.
-
-    Возвращает:
-        y_n_sym : sympy-выражение (ряд по t)
-        val_Y   : dict {k: y^(k)(t0)} для k = 0..n
-        t       : sympy-символ t
-    """
     t0, y0, y1 = data_ode()
     t = sp.Symbol('t')
     y = sp.Function('y')(t)
@@ -44,7 +36,7 @@ def build_taylor_ode(n):
     # Переводим в символы
     Y_sym = {k: sp.expand(to_symbol(Y_func[k])) for k in range(n + 1)}
 
-    # Подстановка значений
+    # Подстановка значений — для ВСЕХ k от 0 до n
     val_Y = {0: sp.Integer(y0), 1: sp.Integer(y1)}
     for k in range(2, n + 1):
         subs_dict = {t: t0}
@@ -57,9 +49,12 @@ def build_taylor_ode(n):
                 f"k={k}: остались символы {val_Y[k].free_symbols}"
             )
 
-    # Строим ряд
+    # Строим ряд — теперь val_Y[k] есть для всех k
     y_n = sp.Integer(0)
     for k in range(n + 1):
         y_n += val_Y[k] / sp.factorial(k) * t ** k
 
-    return y_n, val_Y, t
+    # Ряд для y' — производная от y_n
+    y1_n = sp.diff(y_n, t)
+
+    return y_n, y1_n, val_Y, t
