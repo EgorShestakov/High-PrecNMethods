@@ -27,7 +27,7 @@ def solve_several_h():
         x, y = analytical_decision(t)
 
         print("\n--- Метод Эйлера ---")
-        print_table(x, y, x_e, y_e, t, step=1)
+        print_table(x, y, x_e, y_e, t, step=10)
         print(generate_table_for_error(
             x, y,
             {"Метод Эйлера": x_e},
@@ -37,7 +37,7 @@ def solve_several_h():
         build_option_graph(x, y, x_e, y_e, t, h, "Эйлера")
 
         print("\n--- Метод Хойна ---")
-        print_table(x, y, x_h, y_h, t, step=1)
+        print_table(x, y, x_h, y_h, t, step=10)
         print(generate_table_for_error(
             x, y,
             {"Метод Хойна": x_h},
