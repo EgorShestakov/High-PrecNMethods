@@ -11,3 +11,15 @@ def solve(a, b, h, x_0, y_0, x_next, y_next):
         y.append(y_next(x[i], y[i], t[i]))
 
     return x, y, t
+
+
+def solve_many_steps(t, x0, y0, x_next, y_next):
+
+    x, y = x0, y0
+
+    for i in range(len(t) - 1):
+        x.append(x_next(x, y, t))
+        y.append(y_next(x, y, t))
+
+    return x, y, t
+

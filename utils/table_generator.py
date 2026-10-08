@@ -156,5 +156,5 @@ def additional_information(generated_table):
     return f"\nВсего строк в таблице: {length} (выбрано с шагом {step})"
 
 
-def print_table(x, y, x_approx, y_approx, t, step=1):
+def print_table(x, y, x_approx, y_approx, t, step=10):
     print(generate_table_for_decisions(x, y, x_approx, y_approx, t, step)[0])
